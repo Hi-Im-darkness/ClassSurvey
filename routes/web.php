@@ -17,3 +17,6 @@
 
 Route::get('/', 'StudentController@index')->name('index');
 Route::post('import', 'StudentController@import')->name('import');
+
+Route::get('login', 'AuthController@showLogin');
+Route::post('login', 'AuthController@login');

@@ -7,13 +7,15 @@
 
 namespace App\Models;
 
-use Reliese\Database\Eloquent\Model as Eloquent;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use SMartins\PassportMultiauth\HasMultiAuthApiTokens;
 
 /**
  * Class Student
  * 
  * @property int $id
- * @property string $student_code
+ * @property string $username
  * @property string $name
  * @property string $email
  * @property string $class
@@ -25,8 +27,9 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  *
  * @package App\Models
  */
-class Student extends Eloquent
+class Student extends Authenticatable
 {
+    use Notifiable, HasMultiAuthApiTokens;
 	protected $table = 'student';
 	public $timestamps = false;
 
@@ -36,7 +39,7 @@ class Student extends Eloquent
 	];
 
 	protected $fillable = [
-		'student_code',
+		'username',
 		'name',
 		'email',
 		'class',

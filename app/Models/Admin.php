@@ -7,21 +7,24 @@
 
 namespace App\Models;
 
-use Reliese\Database\Eloquent\Model as Eloquent;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use SMartins\PassportMultiauth\HasMultiAuthApiTokens;
 
 /**
  * Class Admin
  * 
  * @property int $id
  * @property string $name
- * @property string $user_name
+ * @property string $username
  * @property string $password
  * @property string $remember_token
  *
  * @package App\Models
  */
-class Admin extends Eloquent
+class Admin extends Authenticatable
 {
+    use Notifiable, HasMultiAuthApiTokens;
 	protected $table = 'admin';
 	public $timestamps = false;
 
@@ -32,7 +35,7 @@ class Admin extends Eloquent
 
 	protected $fillable = [
 		'name',
-		'user_name',
+		'username',
 		'password',
 	];
 }

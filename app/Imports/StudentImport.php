@@ -21,7 +21,7 @@ class StudentImport implements ToModel, WithStartRow
     public function model(array $row)
     {
         return new Student([
-            'student_code' => $row[1],
+            'username' => $row[1],
             'password' => Hash::make($row[2]),
             'name' => $row[3],
             'email' => $row[4],
