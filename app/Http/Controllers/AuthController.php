@@ -57,6 +57,7 @@ class AuthController extends Controller
                 'access_token' => $tokenResult->accessToken,
                 'name' => $user->name,
                 'id' => $user->value('id'),
+                'provider' => $provider,
                 'role-name' => $user->value('role_name'),
                 'permission' => $user->role()->pluck('permission')->toArray()
             ];
@@ -68,8 +69,15 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->token()->revoke();
-        $data = 'Successfully logged out';
-        return response()->json(ResponseWrapper::wrap(true, 200, 'message', $data));
+        foreach (['admin', 'student', 'teacher'] as $guard) {
+            $user = $request->user($guard);
+            if (!$user)
+                continue;
+            $user->token()->revoke();
+            $data = 'Successfully logged out';
+            return response()->json(ResponseWrapper::wrap(true, 200, 'message', $data));
+        }
+        $data = 'token invalid';
+        return response()->json(ResponseWrapper::wrap(false, 400, 'reason', $data), 400);
     }
 }

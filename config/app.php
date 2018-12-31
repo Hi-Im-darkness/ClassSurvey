@@ -178,6 +178,7 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Reliese\Coders\CodersServiceProvider::class,
         SMartins\PassportMultiauth\Providers\MultiauthServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
 
     ],
 
