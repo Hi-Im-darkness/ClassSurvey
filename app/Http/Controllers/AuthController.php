@@ -7,6 +7,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
+use App\Utils\ResponseWrapper;
 
 class AuthController extends Controller
 {
@@ -51,26 +52,24 @@ class AuthController extends Controller
             $token = $tokenResult->token;
             $token->save();
 
-            return response()->json([
+            $data = [
                 'token_type' => 'Bearer',
                 'access_token' => $tokenResult->accessToken,
                 'name' => $user->name,
                 'id' => $user->value('id'),
                 'role-name' => $user->value('role_name'),
                 'permission' => $user->role()->pluck('permission')->toArray()
-            ]);
+            ];
+            return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
         }
-        return response()->json([
-            'message' => 'Unauthorized'
-        ], 401);
+        $data = 'Wrong username or password';
+        return response()->json(ResponseWrapper::wrap(false, 401, 'reason', $data), 401);
     }
 
     public function logout(Request $request)
     {
-        $request->user()->token()->revoke();
-
-        return response()->json([
-            'message' => 'Successfully logged out'
-        ]);
+        $request->token()->revoke();
+        $data = 'Successfully logged out';
+        return response()->json(ResponseWrapper::wrap(true, 200, 'message', $data));
     }
 }
