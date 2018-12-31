@@ -6,6 +6,7 @@ use App\Models\Authenticator;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -32,6 +33,11 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
         $credentials = array_values($request->only('username', 'password'));
         foreach (['admins', 'students', 'teachers'] as $provider)
         {
@@ -41,15 +47,30 @@ class AuthController extends Controller
                 continue;
             }
 
-            $token = $user->createToken($provider)->accessToken;
+            $tokenResult = $user->createToken('Access Token', [$user->value('role_name')]);
+            $token = $tokenResult->token;
+            $token->save();
 
-            $res = [
+            return response()->json([
                 'token_type' => 'Bearer',
-                'access_token' => $token,
-            ];
-            echo $res;
-            return $res;
+                'access_token' => $tokenResult->accessToken,
+                'name' => $user->name,
+                'id' => $user->value('id'),
+                'role-name' => $user->value('role_name'),
+                'permission' => $user->role()->pluck('permission')->toArray()
+            ]);
         }
-        echo 'login fail';
+        return response()->json([
+            'message' => 'Unauthorized'
+        ], 401);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();
+
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ]);
     }
 }

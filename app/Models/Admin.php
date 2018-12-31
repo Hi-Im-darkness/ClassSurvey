@@ -2,7 +2,7 @@
 
 /**
  * Created by Reliese Model.
- * Date: Sat, 29 Dec 2018 17:51:22 +0000.
+ * Date: Sun, 30 Dec 2018 10:16:03 +0000.
  */
 
 namespace App\Models;
@@ -18,7 +18,9 @@ use SMartins\PassportMultiauth\HasMultiAuthApiTokens;
  * @property string $name
  * @property string $username
  * @property string $password
- * @property string $remember_token
+ * @property string $role_name
+ * 
+ * @property \App\Models\Role $role
  *
  * @package App\Models
  */
@@ -29,13 +31,18 @@ class Admin extends Authenticatable
 	public $timestamps = false;
 
 	protected $hidden = [
-		'password',
-		'remember_token'
+		'password'
 	];
 
 	protected $fillable = [
 		'name',
 		'username',
 		'password',
+		'role_name'
 	];
+
+	public function role()
+	{
+		return $this->belongsTo(\App\Models\Role::class, 'role_name');
+	}
 }

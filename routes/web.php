@@ -20,3 +20,4 @@ Route::post('import', 'StudentController@import')->name('import');
 
 Route::get('login', 'AuthController@showLogin');
 Route::post('login', 'AuthController@login');
+Route::get('logout', 'AuthController@logout');

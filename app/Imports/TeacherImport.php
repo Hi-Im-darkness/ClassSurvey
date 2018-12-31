@@ -25,6 +25,7 @@ class TeacherImport implements ToModel
             'password' => Hash::make($row[2]),
             'name' => $row[3],
             'email' => $row[4],
+            'role_name' => 'TEACHER',
         ]);
     }
 }

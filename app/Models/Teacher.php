@@ -2,7 +2,7 @@
 
 /**
  * Created by Reliese Model.
- * Date: Sat, 29 Dec 2018 17:51:22 +0000.
+ * Date: Sun, 30 Dec 2018 10:12:43 +0000.
  */
 
 namespace App\Models;
@@ -19,8 +19,9 @@ use SMartins\PassportMultiauth\HasMultiAuthApiTokens;
  * @property string $email
  * @property string $username
  * @property string $password
- * @property string $remember_token
+ * @property string $role_name
  * 
+ * @property \App\Models\Role $role
  * @property \Illuminate\Database\Eloquent\Collection $courses
  *
  * @package App\Models
@@ -32,8 +33,7 @@ class Teacher extends Authenticatable
 	public $timestamps = false;
 
 	protected $hidden = [
-		'password',
-		'remember_token'
+		'password'
 	];
 
 	protected $fillable = [
@@ -41,7 +41,13 @@ class Teacher extends Authenticatable
 		'email',
 		'username',
 		'password',
+		'role_name'
 	];
+
+	public function role()
+	{
+		return $this->belongsTo(\App\Models\Role::class, 'role_name');
+	}
 
 	public function courses()
 	{

@@ -2,7 +2,7 @@
 
 /**
  * Created by Reliese Model.
- * Date: Sat, 29 Dec 2018 17:51:22 +0000.
+ * Date: Sun, 30 Dec 2018 10:18:05 +0000.
  */
 
 namespace App\Models;
@@ -20,8 +20,9 @@ use SMartins\PassportMultiauth\HasMultiAuthApiTokens;
  * @property string $email
  * @property string $class
  * @property string $password
- * @property string $remember_token
+ * @property string $role_name
  * 
+ * @property \App\Models\Role $role
  * @property \Illuminate\Database\Eloquent\Collection $dosurveys
  * @property \Illuminate\Database\Eloquent\Collection $courses
  *
@@ -34,8 +35,7 @@ class Student extends Authenticatable
 	public $timestamps = false;
 
 	protected $hidden = [
-		'password',
-		'remember_token'
+		'password'
 	];
 
 	protected $fillable = [
@@ -44,7 +44,13 @@ class Student extends Authenticatable
 		'email',
 		'class',
 		'password',
+		'role_name'
 	];
+
+	public function role()
+	{
+		return $this->belongsTo(\App\Models\Role::class, 'role_name');
+	}
 
 	public function dosurveys()
 	{

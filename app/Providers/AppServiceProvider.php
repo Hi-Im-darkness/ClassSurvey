@@ -17,14 +17,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
-        Passport::routes();
-
-        // Middleware `oauth.providers` middleware defined on $routeMiddleware above
-        Route::group(['middleware' => 'oauth.providers'], function () {
-            Passport::routes(function ($router) {
-                return $router->forAccessTokens();
-            });
-        });
     }
 
     /**

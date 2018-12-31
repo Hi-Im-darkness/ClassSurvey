@@ -26,6 +26,7 @@ class StudentImport implements ToModel, WithStartRow
             'name' => $row[3],
             'email' => $row[4],
             'class' => $row[5],
+            'role_name' => 'STUDENT',
         ]);
     }
 }
