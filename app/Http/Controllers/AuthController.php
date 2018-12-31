@@ -30,7 +30,6 @@ class AuthController extends Controller
     /**
      * @param Request $request
      * @return array
-     * @throws AuthenticationException
      */
     public function login(Request $request)
     {

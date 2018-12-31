@@ -2,7 +2,7 @@
 
 /**
  * Created by Reliese Model.
- * Date: Sat, 29 Dec 2018 17:51:22 +0000.
+ * Date: Mon, 31 Dec 2018 16:49:01 +0000.
  */
 
 namespace App\Models;
@@ -26,11 +26,9 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 class Survey extends Eloquent
 {
 	protected $table = 'survey';
-	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
-		'id' => 'int',
 		'course_id' => 'int',
 		'form_id' => 'int'
 	];

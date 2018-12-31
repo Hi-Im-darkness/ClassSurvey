@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 
-class TeacherImport implements ToModel
+class TeacherImport implements ToModel, WithStartRow
 {
     public function startRow(): int {
         return 2;

@@ -11,13 +11,18 @@
 |
 */
 
-/* Route::get('/', function () { */
-/*     return view('welcome'); */
-/* }); */
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::get('/', 'StudentController@index')->name('index');
-Route::post('import', 'StudentController@import')->name('import');
+Route::get('/import/student', 'ExcelImportController@index');
+Route::post('/import/student', 'ExcelImportController@studentImport')->name('import');
+/* Route::get('/import/teacher', 'ExcelImportController@index'); */
+/* Route::post('/import/teacher', 'ExcelImportController@teacherImport')->name('import'); */
 
-Route::get('login', 'AuthController@showLogin');
-Route::post('login', 'AuthController@login');
-Route::get('logout', 'AuthController@logout');
+Route::get('/login', 'AuthController@showLogin');
+Route::post('/login', 'AuthController@login');
+Route::get('/logout', 'AuthController@logout');
+
+Route::get('/courses', 'SurveyController@showCourses');
+Route::get('/surveyform', 'SurveyController@showSurveyForm');

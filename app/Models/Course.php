@@ -27,6 +27,7 @@ class Course extends Eloquent
 {
 	protected $table = 'course';
 	public $timestamps = false;
+    protected $hidden = ['pivot'];
 
 	protected $casts = [
 		'teacher_id' => 'int'
