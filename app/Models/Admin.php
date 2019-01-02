@@ -45,4 +45,12 @@ class Admin extends Authenticatable
 	{
 		return $this->belongsTo(\App\Models\Role::class, 'role_name');
 	}
+
+    public function hasPermission($per) 
+    {
+        $tmp = $this->role()->where('permission', $per)->get()->toArray();
+        if (empty($tmp))
+            return false;
+        return true;
+    }
 }

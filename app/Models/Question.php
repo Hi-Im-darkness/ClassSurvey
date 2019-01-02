@@ -24,6 +24,7 @@ class Question extends Eloquent
 {
 	protected $table = 'question';
 	public $timestamps = false;
+    protected $hidden = ['pivot'];
 
 	protected $fillable = [
 		'content'

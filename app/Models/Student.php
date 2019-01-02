@@ -62,4 +62,12 @@ class Student extends Authenticatable
 		return $this->belongsToMany(\App\Models\Course::class, 'studentcourse')
 					->withPivot('id');
 	}
+
+    public function hasPermission($per) 
+    {
+        $tmp = $this->role()->where('permission', $per)->get()->toArray();
+        if (empty($tmp))
+            return false;
+        return true;
+    }
 }

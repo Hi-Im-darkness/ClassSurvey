@@ -53,4 +53,12 @@ class Teacher extends Authenticatable
 	{
 		return $this->hasMany(\App\Models\Course::class);
 	}
+
+    public function hasPermission($per) 
+    {
+        $tmp = $this->role()->where('permission', $per)->get()->toArray();
+        if (empty($tmp))
+            return false;
+        return true;
+    }
 }
