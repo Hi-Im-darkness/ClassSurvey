@@ -21,7 +21,7 @@ class CourseController extends Controller
             $data = [];
             foreach (Course::get() as $record) {
                 $course_info = [
-                    'id' => $record->name,
+                    'id' => $record->id,
                     'course_code' => $record->value('course_code'),
                     'course_name' => $record->name,
                     'teacher_name' => $record->teacher()->value('name')
