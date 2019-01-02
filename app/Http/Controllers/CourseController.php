@@ -23,9 +23,9 @@ class CourseController extends Controller
             foreach (Course::get() as $record) {
                 $course_info = [
                     'id' => $record->id,
-                    'course_code' => $record->value('course_code'),
+                    'course_code' => $record->course_code,
                     'course_name' => $record->name,
-                    'teacher_name' => $record->teacher()->value('name')
+                    'teacher_name' => $record->teacher()->first()->name
                 ];
                 array_push($data, $course_info);
             }
@@ -35,9 +35,9 @@ class CourseController extends Controller
             foreach ($user->courses()->get() as $record) {
                 $course_info = [
                     'id' => $record->id,
-                    'course_code' => $record->value('course_code'),
+                    'course_code' => $record->course_code,
                     'course_name' => $record->name,
-                    'teacher_name' => $record->teacher()->value('name')
+                    'teacher_name' => $record->teacher()->first()->name
                 ];
                 array_push($data, $course_info);
             }
@@ -48,14 +48,14 @@ class CourseController extends Controller
                 $hasdone = False;
                 if (Dosurvey::where([
                     ['student_id', $user->id],
-                    ['survey_id', $record->surveys()->value('id')]
+                    ['survey_id', $record->surveys()->first()->id]
                 ]) -> exists())
                     $hasdone = True;
                 $course_info = [
                     'id' => $record->id,
-                    'course_code' => $record->value('course_code'),
+                    'course_code' => $record->course_code,
                     'course_name' => $record->name,
-                    'teacher_name' => $record->teacher()->value('name'),
+                    'teacher_name' => $record->teacher()->first()->name,
                     'has_done' => $hasdone,
                 ];
                 array_push($data, $course_info);

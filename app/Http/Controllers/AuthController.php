@@ -55,9 +55,9 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
                 'access_token' => $tokenResult->accessToken,
                 'name' => $user->name,
-                'id' => $user->value('id'),
+                'id' => $user->id,
                 'provider' => $provider,
-                'role-name' => $user->value('role_name'),
+                'role-name' => $user->role_name,
                 'permission' => $user->role()->pluck('permission')->toArray()
             ];
             return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));

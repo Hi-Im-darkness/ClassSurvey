@@ -26,7 +26,7 @@ class SurveyController extends Controller
 
 
         $courseid =  $request->get('courseid');
-        $id = Survey::where('course_id', $courseid)->value('id');
+        $id = Survey::where('course_id', $courseid)->first()->id;
 
         if (Dosurvey::where([
             ['student_id', $user->id],
@@ -35,7 +35,7 @@ class SurveyController extends Controller
             return response()->json(ResponseWrapper::wrap(false, 400, 'reason', 'this survey has done'), 400);
         }
 
-        $name = Survey::where('course_id', $courseid)->value('name');
+        $name = Survey::where('course_id', $courseid)->first()->name;
         $form = Survey::where('course_id', $courseid)->first()->form()->first();
         $question = $form->questions(); 
         $data = [];
@@ -78,7 +78,7 @@ class SurveyController extends Controller
         $ans_arr = $request->get('answers');
         foreach ($ans_arr as $question_id => $ans) {
             $dosurvey = new Dosurvey([
-                'student_id' => $user->value('id'),
+                'student_id' => $user->id,
                 'survey_id' => $survey_id,
                 'question_id' => $question_id,
                 'answer' => $ans % 6
@@ -105,9 +105,9 @@ class SurveyController extends Controller
             $survey_info = [
                 'id' => $record->id,
                 'name' => $record->name,
-                'course_code' => $record->course()->value('course_code'),
-                'course_name' => $record->course()->value('name'),
-                'form_name' => $record->form()->value('name'),
+                'course_code' => $record->course()->first()->course_code,
+                'course_name' => $record->course()->first()->name,
+                'form_name' => $record->form()->first()->name,
             ];
             array_push($data, $survey_info);
         }
@@ -240,7 +240,7 @@ class SurveyController extends Controller
         $surveyid = $request->get('id');
         $survey = Survey::find($surveyid);
         if (! $user->hasPermission('survey-management')) {
-            if (! $user->course()->where('id', $survey->value('courseid'))-> exists())
+            if (! $user->course()->where('id', $survey->courseid)-> exists())
                 return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
         }
 
@@ -255,7 +255,7 @@ class SurveyController extends Controller
             $std2 = 0;
             array_push($result, [
                 'question_id' => $q->id,
-                'question_content' => $q->value('content'),
+                'question_content' => $q->content,
                 'M' => $m,
                 'STD' => $std,
                 'M1' => $m1,
@@ -267,9 +267,9 @@ class SurveyController extends Controller
         $data = [
             'survey_id' => $surveyid,
             'name' => $survey->name,
-            'course_code' => $survey->course()->value('course_code'),
-            'course_name' => $survey->course()->value('name'),
-            'form_name' => $survey->form()->value('name'),
+            'course_code' => $survey->course()->first()->course_code,
+            'course_name' => $survey->course()->first()->name,
+            'form_name' => $survey->form()->first()->name,
             'result' => $result,
         ];
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
