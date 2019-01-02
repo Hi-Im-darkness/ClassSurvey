@@ -30,7 +30,7 @@ Route::get('/courses', 'CourseController@showCourse');
 Route::get('/courses/surveyform', 'SurveyController@showSurveyForm');
 Route::post('/courses/surveyform', 'SurveyController@doSurvey');
 
-Route::get('/surveys', 'SurveyController@listSurvey');
+Route::get('/surveys', 'SurveyController@showSurvey');
 /* Route::get('/surveys/add', 'SurveyController@gshowAddSurvey'); */
 Route::post('/surveys/add', 'SurveyController@addSurvey');
 /* Route::get('/surveys/edit', 'SurveyController@showEditSurvey'); */

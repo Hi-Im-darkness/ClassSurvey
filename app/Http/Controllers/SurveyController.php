@@ -69,10 +69,10 @@ class SurveyController extends Controller
             ]);
             $dosurvey->save();
         }
-        return response()->json(ResponseWrapper::wrap(true, 200, 'message', 'do survey successfully'));
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
     }
 
-    public function listSurvey(Request $request) {
+    public function showSurvey(Request $request) {
         foreach (['admin', 'student', 'teacher'] as $guard) {
             $user = $request->user($guard);
             if ($user)
@@ -140,7 +140,7 @@ class SurveyController extends Controller
             'form_id' => $in[2]
         ]);
         $survey->save();
-        return response()->json(ResponseWrapper::wrap(true, 200, 'message', 'add survey successfully'));
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
     }
 
     /* public function showEditSurvey(Request $request) { */
@@ -209,6 +209,6 @@ class SurveyController extends Controller
         $survey_id = $request->get('survey_id');
         Survey::find($survey_id)->delete();
 
-        return response()->json(ResponseWrapper::wrap(true, 200, 'message', 'delete survey successfully'));
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
     }
 }

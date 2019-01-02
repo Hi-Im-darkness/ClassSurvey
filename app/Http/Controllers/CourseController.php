@@ -28,7 +28,7 @@ class CourseController extends Controller
                 ];
                 array_push($data, $course_info);
             }
-            return response()->json(ResponseWrapper::wrap(true, 200, 'courses', $data));
+            return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
         } else {
             $data = [];
             foreach ($user->courses()->get() as $record) {
@@ -40,7 +40,7 @@ class CourseController extends Controller
                 ];
                 array_push($data, $course_info);
             }
-            return response()->json(ResponseWrapper::wrap(true, 200, 'courses', $data));
+            return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
         }
     }
 }
