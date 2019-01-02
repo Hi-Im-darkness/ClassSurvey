@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Course;
+use App\Models\Dosurvey;
 use App\Utils\ResponseWrapper;
 
 class CourseController extends Controller
@@ -29,7 +30,7 @@ class CourseController extends Controller
                 array_push($data, $course_info);
             }
             return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
-        } else {
+        } else if ($guard == 'teacher') {
             $data = [];
             foreach ($user->courses()->get() as $record) {
                 $course_info = [
@@ -37,6 +38,25 @@ class CourseController extends Controller
                     'course_code' => $record->value('course_code'),
                     'course_name' => $record->name,
                     'teacher_name' => $record->teacher()->value('name')
+                ];
+                array_push($data, $course_info);
+            }
+            return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
+        } else {
+            $data = [];
+            foreach ($user->courses()->get() as $record) {
+                $hasdone = False;
+                if (Dosurvey::where([
+                    ['student_id', $user->id],
+                    ['survey_id', $record->surveys()->value('id')]
+                ]) -> exists())
+                    $hasdone = True;
+                $course_info = [
+                    'id' => $record->id,
+                    'course_code' => $record->value('course_code'),
+                    'course_name' => $record->name,
+                    'teacher_name' => $record->teacher()->value('name'),
+                    'has_done' => $hasdone,
                 ];
                 array_push($data, $course_info);
             }

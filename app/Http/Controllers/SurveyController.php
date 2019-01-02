@@ -81,7 +81,7 @@ class SurveyController extends Controller
                 'student_id' => $user->value('id'),
                 'survey_id' => $survey_id,
                 'question_id' => $question_id,
-                'answer' => $ans % 5
+                'answer' => $ans % 6
             ]);
             $dosurvey->save();
         }
