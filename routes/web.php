@@ -27,3 +27,4 @@ Route::get('/logout', 'AuthController@logout');
 Route::get('/courses', 'SurveyController@showCourses');
 Route::get('/surveyform', 'SurveyController@showSurveyForm');
 Route::post('/surveyform', 'SurveyController@doSurvey');
+Route::get('/surveys', 'SurveyController@listSurvey');

@@ -85,4 +85,32 @@ class SurveyController extends Controller
         }
         return response()->json(ResponseWrapper::wrap(true, 200, 'message', 'do survey successfully'));
     }
+
+    public function listSurvey(Request $request) {
+        foreach (['admin', 'student', 'teacher'] as $guard) {
+            $user = $request->user($guard);
+            if ($user)
+                break;
+        }
+        if (! $user)
+            return response()->json(ResponseWrapper::wrap(false, 400, 'reason', 'token invalid'), 400);
+
+        if (! $user->hasPermission('survey-management'))
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'unauthorized'), 401);
+
+        $survey_id = Survey::pluck('id')->toArray();
+        $data = [];
+        foreach (Survey::get() as $record) {
+            $survey_info = [
+                'id' => $record->id,
+                'name' => $record->name,
+                'course_code' => $record->course()->value('course_code'),
+                'course_name' => $record->course()->value('name'),
+                'form_name' => $record->form()->value('name'),
+            ];
+            array_push($data, $survey_info);
+        }
+        return response()->json(ResponseWrapper::wrap(true, 200, 'surveys', $data));
+
+    }
 }

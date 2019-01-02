@@ -27,11 +27,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Passport::tokensCan([
-            'ADMIN' => 'admin role',
-            'STUDENT' => 'student role',
-            'TEACHER' => 'teacher role'
-        ]);
+        /* Passport::tokensCan([ */
+        /*     'ADMIN' => 'admin role', */
+        /*     'STUDENT' => 'student role', */
+        /*     'TEACHER' => 'teacher role' */
+        /* ]); */
         Passport::routes();
 
         Route::group(['middleware' => 'oauth.providers'], function () {

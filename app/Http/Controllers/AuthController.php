@@ -47,7 +47,7 @@ class AuthController extends Controller
                 continue;
             }
 
-            $tokenResult = $user->createToken('Access Token', [$user->value('role_name')]);
+            $tokenResult = $user->createToken('Access Token');
             $token = $tokenResult->token;
             $token->save();
 
