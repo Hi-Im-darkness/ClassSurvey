@@ -24,7 +24,15 @@ Route::get('/login', 'AuthController@showLogin');
 Route::post('/login', 'AuthController@login');
 Route::get('/logout', 'AuthController@logout');
 
-Route::get('/courses', 'SurveyController@showCourses');
-Route::get('/surveyform', 'SurveyController@showSurveyForm');
-Route::post('/surveyform', 'SurveyController@doSurvey');
+Route::get('/forms', 'FormController@showForm');
+
+Route::get('/courses', 'CourseController@showCourse');
+Route::get('/courses/surveyform', 'SurveyController@showSurveyForm');
+Route::post('/courses/surveyform', 'SurveyController@doSurvey');
+
 Route::get('/surveys', 'SurveyController@listSurvey');
+/* Route::get('/surveys/add', 'SurveyController@gshowAddSurvey'); */
+Route::post('/surveys/add', 'SurveyController@addSurvey');
+/* Route::get('/surveys/edit', 'SurveyController@showEditSurvey'); */
+Route::post('/surveys/edit', 'SurveyController@editSurvey');
+Route::post('/surveys/delete', 'SurveyController@deleteSurvey');
