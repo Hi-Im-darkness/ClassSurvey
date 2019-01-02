@@ -15,7 +15,7 @@ class CourseController extends Controller
                 break;
         }
         if (! $user)
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'token invalid'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         if ($user->hasPermission('course-management')) {
             $data = [];

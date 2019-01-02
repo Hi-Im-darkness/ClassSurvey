@@ -15,10 +15,10 @@ class FormController extends Controller
                 break;
         }
         if (! $user)
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'token invalid'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         if (! $user->hasPermission('form-management'))
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'unauthorized'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         $data = Form::get(['id', 'name'])->toArray();
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));

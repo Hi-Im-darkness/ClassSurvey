@@ -36,3 +36,4 @@ Route::post('/surveys', 'SurveyController@addSurvey');
 /* Route::get('/surveys/edit', 'SurveyController@showEditSurvey'); */
 Route::put('/surveys', 'SurveyController@editSurvey');
 Route::delete('/surveys', 'SurveyController@deleteSurvey');
+Route::get('/surveys/result', 'SurveyController@showResult');

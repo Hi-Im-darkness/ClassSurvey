@@ -14,6 +14,17 @@ class StudentController extends Controller
     }
 
     public function import(Request $request){
+        foreach (['admin', 'student', 'teacher'] as $guard) {
+            $user = $request->user($guard);
+            if ($user)
+                break;
+        }
+        if (! $user)
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        if (! $user->hasPermission('student-management'))
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+        
         //validate the xls file
         $this->validate($request, array(
             'file'      => 'required'
@@ -23,10 +34,9 @@ class StudentController extends Controller
             $extension = File::extension($request->file->getClientOriginalName());
             if ($extension == "xlsx" || $extension == "xls" || $extension == "csv") {
                 Excel::import(new StudentImport, $request->file);
-                return redirect('/')->with('success', 'All good!');
+                return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
             } else {
-                Session::flash('error', 'File is a '.$extension.' file.!! Please upload a valid xls/csv file..!!');
-                return back();
+                return response()->json(ResponseWrapper::wrap(false, 400, 'reason', 'file is a '.$extension.' file.!! Please upload a valid xls/csv file..!!'));
             }
         }
     }

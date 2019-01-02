@@ -19,14 +19,22 @@ class SurveyController extends Controller
                 break;
         }
         if (! $user)
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'token invalid'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         if (! $user->hasPermission('do-survey'))
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'unauthorized'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
 
         $courseid =  $request->get('courseid');
         $id = Survey::where('course_id', $courseid)->value('id');
+
+        if (Dosurvey::where([
+            ['student_id', $user->id],
+            ['survey_id', $id]
+        ]) -> exist()) {
+            return response()->json(ResponseWrapper::wrap(false, 400, 'reason', 'this survey has done'), 400);
+        }
+
         $name = Survey::where('course_id', $courseid)->value('name');
         $form = Survey::where('course_id', $courseid)->first()->form()->first();
         $question = $form->questions(); 
@@ -52,13 +60,21 @@ class SurveyController extends Controller
                 break;
         }
         if (! $user)
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'token invalid'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         if (! $user->hasPermission('do-survey'))
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'unauthorized'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         /* need check */
         $survey_id = $request->get('survey_id');
+
+        if (Dosurvey::where([
+            ['student_id', $user->id],
+            ['survey_id', $survey_id]
+        ]) -> exist()) {
+            return response()->json(ResponseWrapper::wrap(false, 400, 'reason', 'this survey has done'), 400);
+        }
+
         $ans_arr = $request->get('answers');
         foreach ($ans_arr as $question_id => $ans) {
             $dosurvey = new Dosurvey([
@@ -79,10 +95,10 @@ class SurveyController extends Controller
                 break;
         }
         if (! $user)
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'token invalid'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         if (! $user->hasPermission('survey-management'))
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'unauthorized'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         $data = [];
         foreach (Survey::get() as $record) {
@@ -106,10 +122,10 @@ class SurveyController extends Controller
     /*             break; */
     /*     } */
     /*     if (! $user) */
-    /*         return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'token invalid'), 401); */
+    /*         return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401); */
 
     /*     if (! $user->hasPermission('survey-management')) */
-    /*         return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'unauthorized'), 401); */
+    /*         return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401); */
 
     /*     $courses = Course::get(['id', 'name'])->toArray(); */
     /*     $form = Form::get(['id', 'name'])->toArray(); */
@@ -127,10 +143,10 @@ class SurveyController extends Controller
                 break;
         }
         if (! $user)
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'token invalid'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         if (! $user->hasPermission('survey-management'))
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'unauthorized'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         /* need check */
         $in = array_values($request->only('name', 'course_id', 'form_id'));
@@ -150,10 +166,10 @@ class SurveyController extends Controller
     /*             break; */
     /*     } */
     /*     if (! $user) */
-    /*         return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'token invalid'), 401); */
+    /*         return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401); */
 
     /*     if (! $user->hasPermission('survey-management')) */
-    /*         return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'unauthorized'), 401); */
+    /*         return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401); */
 
     /*     $survey_id = $request->get('surveyid'); */
     /*     $survey = Survey::find($survey_id); */
@@ -177,10 +193,10 @@ class SurveyController extends Controller
                 break;
         }
         if (! $user)
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'token invalid'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         if (! $user->hasPermission('survey-management'))
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'unauthorized'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         $in = array_values($request->only('survey_id', 'name', 'course_id', 'form_id'));
         $survey = Survey::find($in[0]);
@@ -201,14 +217,61 @@ class SurveyController extends Controller
                 break;
         }
         if (! $user)
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'token invalid'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         if (! $user->hasPermission('survey-management'))
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'unauthorized'), 401);
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         $survey_id = $request->get('id');
         Survey::find($survey_id)->delete();
 
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
+    }
+
+    public function showResult(Request $request) {
+        foreach (['admin', 'teacher'] as $guard) {
+            $user = $request->user($guard);
+            if ($user)
+                break;
+        }
+        if (! $user)
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        $surveyid = $request->get('id');
+        $survey = Survey::find($surveyid);
+        if (! $user->hasPermission('survey-management')) {
+            if (! $user->course()->where('id', $survey->value('courseid'))-> exist())
+                return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+        }
+
+        $question = $survey->form()->first()->questions()->get(['question.id', 'content']);
+        $result = [];
+        foreach ($question as $q) {
+            $m = 0;
+            $std = 0;
+            $m1 = 0;
+            $std1 = 0;
+            $m2 = 0;
+            $std2 = 0;
+            array_push($result, [
+                'question_id' => $q->id,
+                'question_content' => $q->value('content'),
+                'M' => $m,
+                'STD' => $std,
+                'M1' => $m1,
+                'STD1' => $std1,
+                'M2' => $m2,
+                'STD2' => $std2,
+            ]);
+        }
+        $data = [
+            'survey_id' => $surveyid,
+            'name' => $survey->name,
+            'course_code' => $survey->course()->value('course_code'),
+            'course_name' => $survey->course()->value('name'),
+            'form_name' => $survey->form()->value('name'),
+            'result' => $result,
+        ];
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
     }
 }
