@@ -31,7 +31,7 @@ class SurveyController extends Controller
         if (Dosurvey::where([
             ['student_id', $user->id],
             ['survey_id', $id]
-        ]) -> exist()) {
+        ]) -> exists()) {
             return response()->json(ResponseWrapper::wrap(false, 400, 'reason', 'this survey has done'), 400);
         }
 
@@ -71,7 +71,7 @@ class SurveyController extends Controller
         if (Dosurvey::where([
             ['student_id', $user->id],
             ['survey_id', $survey_id]
-        ]) -> exist()) {
+        ]) -> exists()) {
             return response()->json(ResponseWrapper::wrap(false, 400, 'reason', 'this survey has done'), 400);
         }
 
@@ -240,7 +240,7 @@ class SurveyController extends Controller
         $surveyid = $request->get('id');
         $survey = Survey::find($surveyid);
         if (! $user->hasPermission('survey-management')) {
-            if (! $user->course()->where('id', $survey->value('courseid'))-> exist())
+            if (! $user->course()->where('id', $survey->value('courseid'))-> exists())
                 return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
         }
 
