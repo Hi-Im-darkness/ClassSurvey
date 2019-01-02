@@ -32,7 +32,7 @@ Route::post('/courses/surveyform', 'SurveyController@doSurvey');
 
 Route::get('/surveys', 'SurveyController@showSurvey');
 /* Route::get('/surveys/add', 'SurveyController@gshowAddSurvey'); */
-Route::post('/surveys/add', 'SurveyController@addSurvey');
+Route::post('/surveys', 'SurveyController@addSurvey');
 /* Route::get('/surveys/edit', 'SurveyController@showEditSurvey'); */
-Route::post('/surveys/edit', 'SurveyController@editSurvey');
-Route::post('/surveys/delete', 'SurveyController@deleteSurvey');
+Route::put('/surveys', 'SurveyController@editSurvey');
+Route::delete('/surveys', 'SurveyController@deleteSurvey');

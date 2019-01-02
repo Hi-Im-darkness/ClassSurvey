@@ -191,7 +191,7 @@ class SurveyController extends Controller
         ]);
         $survey->save();
         
-        return response()->json(ResponseWrapper::wrap(true, 200, 'message', 'edit survey successfully'));
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
     }
 
     public function deleteSurvey(Request $request) {
@@ -206,7 +206,7 @@ class SurveyController extends Controller
         if (! $user->hasPermission('survey-management'))
             return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'unauthorized'), 401);
 
-        $survey_id = $request->get('survey_id');
+        $survey_id = $request->get('id');
         Survey::find($survey_id)->delete();
 
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
