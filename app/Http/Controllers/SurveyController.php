@@ -47,7 +47,7 @@ class SurveyController extends Controller
         foreach ($question->distinct('category')->pluck('category')->toArray() as $cat) {
             array_push($data, [
                 'category' => $cat,
-                'questions' => Question::where('category', $cat)->pluck('content')->toArray()
+                'questions' => Question::where('category', $cat)->get(['id', 'content'])->toArray()
             ]);
         }
         $data = [
