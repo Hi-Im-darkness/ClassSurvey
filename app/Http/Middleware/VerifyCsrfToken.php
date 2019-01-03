@@ -23,5 +23,6 @@ class VerifyCsrfToken extends Middleware
         '/courses/surveyform',
         '/surveys/',
         '/students',
+        '/teachers',
     ];
 }

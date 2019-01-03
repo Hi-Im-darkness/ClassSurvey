@@ -44,3 +44,8 @@ Route::get('/students', 'StudentController@showStudent');
 Route::post('/students', 'StudentController@addStudent');
 Route::put('/students', 'StudentController@editStudent');
 Route::delete('/students', 'StudentController@deleteStudent');
+
+Route::get('/teachers', 'TeacherController@showTeacher');
+Route::post('/teachers', 'TeacherController@addTeacher');
+Route::put('/teachers', 'TeacherController@editTeacher');
+Route::delete('/teachers', 'TeacherController@deleteTeacher');

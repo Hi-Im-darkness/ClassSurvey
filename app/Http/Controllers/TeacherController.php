@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Imports\TeacherImport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Teacher;
+use App\Utils\ResponseWrapper;
+use Illuminate\Support\Facades\Hash;
 use File;
 
 class TeacherController extends Controller
@@ -35,5 +38,88 @@ class TeacherController extends Controller
                 return response()->json(ResponseWrapper::wrap(false, 400, 'reason', 'file is a '.$extension.' file.!! Please upload a valid xls/csv file..!!'));
             }
         }
+    }
+
+    public function showTeacher(Request $request) {
+        foreach (['admin', 'student', 'teacher'] as $guard) {
+            $user = $request->user($guard);
+            if ($user)
+                break;
+        }
+        if (! $user)
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        if (! $user->hasPermission('teacher-management'))
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        $data = Teacher::get(['id', 'username', 'name', 'email'])->toArray();
+
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
+    }
+
+    public function addTeacher(Request $request) {
+        foreach (['admin', 'student', 'teacher'] as $guard) {
+            $user = $request->user($guard);
+            if ($user)
+                break;
+        }
+        if (! $user)
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        if (! $user->hasPermission('teacher-management'))
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        $in = array_values($request->only('username', 'name', 'email', 'password'));
+        $student = new Teacher([
+            'username' => $in[0],
+            'name' => $in[1],
+            'email' => $in[2],
+            'password' => Hash::make($in[3]),
+            'role_name' => 'TEACHER',
+        ]);
+        $student->save();
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
+    }
+
+    public function editTeacher(Request $request) {
+        foreach (['admin', 'student', 'teacher'] as $guard) {
+            $user = $request->user($guard);
+            if ($user)
+                break;
+        }
+        if (! $user)
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        if (! $user->hasPermission('teacher-management'))
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        $in = array_values($request->only('teacher_id', 'username', 'name', 'email', 'password'));
+        $teacher = Teacher::find($in[0]);
+        $teacher->update([
+            'username' => $in[1],
+            'name' => $in[2],
+            'email' => $in[3],
+            'password' => Hash::make($in[4]),
+        ]);
+        $teacher->save();
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
+    }
+
+    public function deleteTeacher(Request $request) {
+        foreach (['admin', 'student', 'teacher'] as $guard) {
+            $user = $request->user($guard);
+            if ($user)
+                break;
+        }
+        if (! $user)
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        if (! $user->hasPermission('teacher-management'))
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        $teacher_id = $request->get('id');
+        Teacher::find($teacher_id)->delete();
+
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
     }
 }
