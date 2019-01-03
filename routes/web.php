@@ -15,10 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/import/student', 'ExcelImportController@index');
-Route::post('/import/student', 'ExcelImportController@studentImport')->name('import');
+/* Route::get('/import/student', 'ExcelImportController@index'); */
+/* Route::post('/import/student', 'ExcelImportController@studentImport')->name('import'); */
 /* Route::get('/import/teacher', 'ExcelImportController@index'); */
 /* Route::post('/import/teacher', 'ExcelImportController@teacherImport')->name('import'); */
+Route::get('/import/course', 'ExcelImportController@index');
+Route::post('/import/course', 'CourseController@import')->name('import');
 
 Route::get('/login', 'AuthController@showLogin');
 Route::post('/login', 'AuthController@login');
@@ -37,3 +39,8 @@ Route::post('/surveys', 'SurveyController@addSurvey');
 Route::put('/surveys', 'SurveyController@editSurvey');
 Route::delete('/surveys', 'SurveyController@deleteSurvey');
 Route::get('/surveys/result', 'SurveyController@showResult');
+
+Route::get('/students', 'StudentController@showStudent');
+Route::post('/students', 'StudentController@addStudent');
+Route::put('/students', 'StudentController@editStudent');
+Route::delete('/students', 'StudentController@deleteStudent');

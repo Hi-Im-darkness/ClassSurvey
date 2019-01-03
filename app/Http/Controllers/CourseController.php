@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\Dosurvey;
 use App\Utils\ResponseWrapper;
+use App\Imports\CoursesImport;
+use Maatwebsite\Excel\Facades\Excel;
+use File;
 
 class CourseController extends Controller
 {
@@ -61,6 +64,33 @@ class CourseController extends Controller
                 array_push($data, $course_info);
             }
             return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
+        }
+    }
+
+    public function import(Request $request){
+        foreach (['admin', 'student', 'teacher'] as $guard) {
+            $user = $request->user($guard);
+            if ($user)
+                break;
+        }
+        if (! $user)
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        if (! $user->hasPermission('course-management'))
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+        
+        $this->validate($request, array(
+            'file'      => 'required'
+        ));
+ 
+        if($request->hasFile('file')){
+            $extension = File::extension($request->file->getClientOriginalName());
+            if ($extension == "xlsx" || $extension == "xls" || $extension == "csv") {
+                Excel::import(new CoursesImport, $request->file);
+                return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
+            } else {
+                return response()->json(ResponseWrapper::wrap(false, 400, 'reason', 'file is a '.$extension.' file.!! Please upload a valid xls/csv file..!!'));
+            }
         }
     }
 }

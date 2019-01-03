@@ -111,30 +111,9 @@ class SurveyController extends Controller
             ];
             array_push($data, $survey_info);
         }
-        return response()->json(ResponseWrapper::wrap(true, 200, 'surveys', $data));
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
 
     }
-
-    /* public function showAddSurvey(Request $request) { */
-    /*     foreach (['admin', 'student', 'teacher'] as $guard) { */
-    /*         $user = $request->user($guard); */
-    /*         if ($user) */
-    /*             break; */
-    /*     } */
-    /*     if (! $user) */
-    /*         return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401); */
-
-    /*     if (! $user->hasPermission('survey-management')) */
-    /*         return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401); */
-
-    /*     $courses = Course::get(['id', 'name'])->toArray(); */
-    /*     $form = Form::get(['id', 'name'])->toArray(); */
-    /*     $data = [ */
-    /*         'courses' => $courses, */
-    /*         'forms' => $form, */
-    /*     ]; */
-    /*     return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data)); */
-    /* } */
 
     public function addSurvey(Request $request) {
         foreach (['admin', 'student', 'teacher'] as $guard) {
@@ -158,33 +137,6 @@ class SurveyController extends Controller
         $survey->save();
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
     }
-
-    /* public function showEditSurvey(Request $request) { */
-    /*     foreach (['admin', 'student', 'teacher'] as $guard) { */
-    /*         $user = $request->user($guard); */
-    /*         if ($user) */
-    /*             break; */
-    /*     } */
-    /*     if (! $user) */
-    /*         return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401); */
-
-    /*     if (! $user->hasPermission('survey-management')) */
-    /*         return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401); */
-
-    /*     $survey_id = $request->get('surveyid'); */
-    /*     $survey = Survey::find($survey_id); */
-
-    /*     $courses = Course::get(['id', 'name'])->toArray(); */
-    /*     $form = Form::get(['id', 'name'])->toArray(); */
-    /*     $data = [ */
-    /*         'survey_id' => $survey_id, */
-    /*         'course_id' => $survey->value('course_id'), */
-    /*         'form_id' => $survey->value('form_id'), */
-    /*         'courses' => $courses, */
-    /*         'forms' => $form, */
-    /*     ]; */
-    /*     return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data)); */
-    /* } */
 
     public function editSurvey(Request $request) {
         foreach (['admin', 'student', 'teacher'] as $guard) {
