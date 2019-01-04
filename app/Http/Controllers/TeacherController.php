@@ -104,8 +104,11 @@ class TeacherController extends Controller
             'username' => $in[1],
             'name' => $in[2],
             'email' => $in[3],
-            'password' => Hash::make($in[4]),
         ]);
+        if ($in[4])
+            $teacher->update([
+                'password' => Hash::make($in[4]),
+            ]);
         $teacher->save();
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', [
             'id' => $teacher->id,

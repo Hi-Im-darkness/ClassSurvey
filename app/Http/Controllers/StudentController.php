@@ -87,7 +87,7 @@ class StudentController extends Controller
                                                     'id' => $student->id,
                                                     'username' => $student->username,
                                                     'name' => $student->name,
-                                                    'email' => $student->class,
+                                                    'email' => $student->email,
                                                     'class' => $student->class,
                                                 ]));
     }
@@ -104,21 +104,24 @@ class StudentController extends Controller
         if (! $user->hasPermission('student-management'))
             return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
-        $in = array_values($request->only('id', 'username', 'name', 'email', 'password', 'class'));
+        $in = array_values($request->only('id', 'username', 'name', 'email', 'class', 'password'));
         $student = Student::find($in[0]);
         $student->update([
             'username' => $in[1],
             'name' => $in[2],
             'email' => $in[3],
-            'password' => Hash::make($in[4]),
-            'class' => $in[5],
+            'class' => $in[4],
         ]);
+        if ($in[5])
+            $student->update([
+                'password' => Hash::make($in[4]),
+            ]);
         $student->save();
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', [
                                                     'id' => $student->id,
                                                     'username' => $student->username,
                                                     'name' => $student->name,
-                                                    'email' => $student->class,
+                                                    'email' => $student->email,
                                                     'class' => $student->class,
                                                 ]));
     }
