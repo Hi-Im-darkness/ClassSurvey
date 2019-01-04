@@ -70,15 +70,20 @@ class TeacherController extends Controller
             return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         $in = array_values($request->only('username', 'name', 'email', 'password'));
-        $student = new Teacher([
+        $teacher = new Teacher([
             'username' => $in[0],
             'name' => $in[1],
             'email' => $in[2],
             'password' => Hash::make($in[3]),
             'role_name' => 'TEACHER',
         ]);
-        $student->save();
-        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
+        $teacher->save();
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', [
+            'id' => $teacher->id,
+            'username' => $teacher->username,
+            'name' => $teacher->name,
+            'email' => $teacher->email,
+        ]));
     }
 
     public function editTeacher(Request $request) {
@@ -93,7 +98,7 @@ class TeacherController extends Controller
         if (! $user->hasPermission('teacher-management'))
             return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
-        $in = array_values($request->only('teacher_id', 'username', 'name', 'email', 'password'));
+        $in = array_values($request->only('id', 'username', 'name', 'email', 'password'));
         $teacher = Teacher::find($in[0]);
         $teacher->update([
             'username' => $in[1],
@@ -102,7 +107,12 @@ class TeacherController extends Controller
             'password' => Hash::make($in[4]),
         ]);
         $teacher->save();
-        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', [
+            'id' => $teacher->id,
+            'username' => $teacher->username,
+            'name' => $teacher->name,
+            'email' => $teacher->email,
+        ]));
     }
 
     public function deleteTeacher(Request $request) {

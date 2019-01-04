@@ -83,7 +83,13 @@ class StudentController extends Controller
             'role_name' => 'STUDENT',
         ]);
         $student->save();
-        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', [
+                                                    'id' => $student->id,
+                                                    'username' => $student->username,
+                                                    'name' => $student->name,
+                                                    'email' => $student->class,
+                                                    'class' => $student->class,
+                                                ]));
     }
 
     public function editStudent(Request $request) {
@@ -98,7 +104,7 @@ class StudentController extends Controller
         if (! $user->hasPermission('student-management'))
             return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
-        $in = array_values($request->only('student_id', 'username', 'name', 'email', 'password', 'class'));
+        $in = array_values($request->only('id', 'username', 'name', 'email', 'password', 'class'));
         $student = Student::find($in[0]);
         $student->update([
             'username' => $in[1],
@@ -108,7 +114,13 @@ class StudentController extends Controller
             'class' => $in[5],
         ]);
         $student->save();
-        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', [
+                                                    'id' => $student->id,
+                                                    'username' => $student->username,
+                                                    'name' => $student->name,
+                                                    'email' => $student->class,
+                                                    'class' => $student->class,
+                                                ]));
     }
 
     public function deleteStudent(Request $request) {

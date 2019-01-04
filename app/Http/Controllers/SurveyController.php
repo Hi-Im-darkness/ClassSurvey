@@ -137,7 +137,15 @@ class SurveyController extends Controller
             'form_id' => $in[2]
         ]);
         $survey->save();
-        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', [
+                'id' => $survey->id,
+                'name' => $survey->name,
+                'course_code' => $survey->course()->first()->course_code,
+                'course_name' => $survey->course()->first()->name,
+                'form_name' => $survey->form()->first()->name,
+                'teacher_name' => $survey->course()->first()->teacher()->first()->name,
+                'create_at' => $survey->create_at,
+        ]));
     }
 
     public function editSurvey(Request $request) {
@@ -152,7 +160,7 @@ class SurveyController extends Controller
         if (! $user->hasPermission('survey-management'))
             return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
-        $in = array_values($request->only('survey_id', 'name', 'course_id', 'form_id'));
+        $in = array_values($request->only('id', 'name', 'course_id', 'form_id'));
         $survey = Survey::find($in[0]);
         $survey->update([
             'name' => $in[1],
@@ -161,7 +169,15 @@ class SurveyController extends Controller
         ]);
         $survey->save();
         
-        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', [
+                'id' => $survey->id,
+                'name' => $survey->name,
+                'course_code' => $survey->course()->first()->course_code,
+                'course_name' => $survey->course()->first()->name,
+                'form_name' => $survey->form()->first()->name,
+                'teacher_name' => $survey->course()->first()->teacher()->first()->name,
+                'create_at' => $survey->create_at,
+        ]));
     }
 
     public function deleteSurvey(Request $request) {
