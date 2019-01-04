@@ -2,7 +2,7 @@
 
 /**
  * Created by Reliese Model.
- * Date: Mon, 31 Dec 2018 16:49:01 +0000.
+ * Date: Fri, 04 Jan 2019 02:31:21 +0000.
  */
 
 namespace App\Models;
@@ -16,6 +16,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property string $name
  * @property int $course_id
  * @property int $form_id
+ * @property \Carbon\Carbon $create_at
  * 
  * @property \App\Models\Course $course
  * @property \App\Models\Form $form
@@ -33,10 +34,15 @@ class Survey extends Eloquent
 		'form_id' => 'int'
 	];
 
+	protected $dates = [
+		'create_at'
+	];
+
 	protected $fillable = [
 		'name',
 		'course_id',
-		'form_id'
+		'form_id',
+		'create_at'
 	];
 
 	public function course()

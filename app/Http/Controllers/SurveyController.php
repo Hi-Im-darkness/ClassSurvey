@@ -108,6 +108,8 @@ class SurveyController extends Controller
                 'course_code' => $record->course()->first()->course_code,
                 'course_name' => $record->course()->first()->name,
                 'form_name' => $record->form()->first()->name,
+                'teacher_name' => $record->course()->first()->teacher()->first()->name,
+                'create_at' => $record->create_at,
             ];
             array_push($data, $survey_info);
         }
