@@ -97,11 +97,16 @@ class SurveyController extends Controller
         if (! $user)
             return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
-        if (! $user->hasPermission('survey-management'))
+        if ($user->hasPermission('survey-management'))
+            $surveys = Survey::get();
+        else if ($user->hasPermission('survey-result')) {
+            $course_id = $user->courses()->pluck('id')->toArray();
+            $surveys = Survey::findMany($course_id)->all();
+        } else
             return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
         $data = [];
-        foreach (Survey::get() as $record) {
+        foreach ($surveys as $record) {
             $survey_info = [
                 'id' => $record->id,
                 'name' => $record->name,
