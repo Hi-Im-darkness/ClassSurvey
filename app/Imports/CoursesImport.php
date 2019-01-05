@@ -39,5 +39,12 @@ class CoursesImport implements ToCollection
             ]);
             $stu_cou->save();
         }
+        $res = [
+            'id' => $course->id,
+            'course_code' => $course_code,
+            'course_name' => $course_name,
+            'teacher_name' => $course->teacher()->first()->name
+        ];
+        return $res;
     }
 }

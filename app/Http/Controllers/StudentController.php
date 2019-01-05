@@ -112,9 +112,9 @@ class StudentController extends Controller
             'email' => $in[3],
             'class' => $in[4],
         ]);
-        if ($in[5])
+        if (array_key_exists(5, $in))
             $student->update([
-                'password' => Hash::make($in[4]),
+                'password' => Hash::make($in[5]),
             ]);
         $student->save();
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', [

@@ -105,7 +105,7 @@ class TeacherController extends Controller
             'name' => $in[2],
             'email' => $in[3],
         ]);
-        if ($in[4])
+        if (array_key_exists(4, $in))
             $teacher->update([
                 'password' => Hash::make($in[4]),
             ]);

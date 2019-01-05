@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Utils\ResponseWrapper;
+use App\Utils\Calculator;
 use App\Models\Course;
 use App\Models\Survey;
 use App\Models\Form;
@@ -222,21 +223,25 @@ class SurveyController extends Controller
         $question = $survey->form()->first()->questions()->get(['question.id', 'content']);
         $result = [];
         foreach ($question as $q) {
-            $m = 0;
+            $answer_res = Dosurvey::where([
+                ['question_id', $q->id],
+                ['survey_id', $surveyid]
+            ]);
+            $m = $answer_res->avg('answer');
             $std = 0;
-            $m1 = 0;
-            $std1 = 0;
-            $m2 = 0;
-            $std2 = 0;
+            /* $m1 = 0; */
+            /* $std1 = 0; */
+            /* $m2 = 0; */
+            /* $std2 = 0; */
             array_push($result, [
                 'question_id' => $q->id,
                 'question_content' => $q->content,
                 'M' => $m,
                 'STD' => $std,
-                'M1' => $m1,
-                'STD1' => $std1,
-                'M2' => $m2,
-                'STD2' => $std2,
+                /* 'M1' => $m1, */
+                /* 'STD1' => $std1, */
+                /* 'M2' => $m2, */
+                /* 'STD2' => $std2, */
             ]);
         }
         $data = [
@@ -250,3 +255,39 @@ class SurveyController extends Controller
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
     }
 }
+
+/*
+ *function phuongSai(data, id) {
+          var phuongSai;
+          var sumPhuongSai = 0;
+          var avg = avgPoint(data, id);
+
+
+          for (var i = 0; i < data.length; i++) {
+            var array = JSON.parse(data[i].result);
+            //console.log(array);
+            sumPhuongSai += Math.pow(array.r[id] - avg, 2);
+
+          }
+
+          console.log(sumPhuongSai/data.length);
+
+          if (isNaN(Math.sqrt(sumPhuongSai/data.length))) {
+            return 0;
+          }
+
+          return Math.sqrt(sumPhuongSai/data.length);
+      }
+function avgPoint(data, id) { // tính điểm trung bình cho từng câu hỏi theo mã
+        var sum = 0;
+        for (var i = 0; i < data.length; i++) {
+          var array = JSON.parse(data[i].result);
+          //console.log(array);
+          sum += parseInt(array.r[id]);
+        }
+        if (isNaN(sum/data.length)) {
+          return 0;
+        }
+        return sum/data.length;
+      }
+ */
