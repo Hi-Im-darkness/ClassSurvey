@@ -15,11 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/import/student', 'ExcelImportController@index');
-Route::post('/import/student', 'ExcelImportController@studentImport');
-Route::get('/import/teacher', 'ExcelImportController@index');
-Route::post('/import/teacher', 'ExcelImportController@teacherImport');
-Route::get('/import/course', 'ExcelImportController@index');
+Route::post('/import/student', 'StudentController@import');
+Route::post('/import/teacher', 'TeacherController@import');
 Route::post('/import/course', 'CourseController@import');
 
 Route::get('/login', 'AuthController@showLogin');
@@ -29,6 +26,7 @@ Route::get('/logout', 'AuthController@logout');
 Route::get('/forms', 'FormController@showForm');
 
 Route::get('/courses', 'CourseController@showCourse');
+Route::get('/courses/liststudent', 'CourseController@listStudent');
 Route::get('/courses/surveyform', 'SurveyController@showSurveyForm');
 Route::post('/courses/surveyform', 'SurveyController@doSurvey');
 

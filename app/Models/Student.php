@@ -35,7 +35,8 @@ class Student extends Authenticatable
 	public $timestamps = false;
 
 	protected $hidden = [
-		'password'
+        'password',
+        'pivot'
 	];
 
 	protected $fillable = [
