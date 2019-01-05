@@ -215,7 +215,7 @@ class SurveyController extends Controller
         $surveyid = $request->get('id');
         $survey = Survey::find($surveyid);
         if (! $user->hasPermission('survey-management')) {
-            if (! $user->course()->where('id', $survey->courseid)-> exists())
+            if (! $user->courses()->where('id', $survey->courseid)-> exists())
                 return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
         }
 
