@@ -223,12 +223,12 @@ class SurveyController extends Controller
         $question = $survey->form()->first()->questions()->get(['question.id', 'content']);
         $result = [];
         foreach ($question as $q) {
-            $answer_res = Dosurvey::where([
+            $answer_arr = Dosurvey::where([
                 ['question_id', $q->id],
                 ['survey_id', $surveyid]
-            ]);
-            $m = $answer_res->avg('answer');
-            $std = 0;
+            ])->pluck('answer')->toArray();
+            $m = Calculator::arg($answer_arr);
+            $std = Calculator::stdev($answer_arr);
             /* $m1 = 0; */
             /* $std1 = 0; */
             /* $m2 = 0; */
