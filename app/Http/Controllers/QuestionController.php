@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Form;
-use App\Models\Formquestion;
+use App\Models\Question;
 use App\Utils\ResponseWrapper;
 
-class FormController extends Controller
+class QuestionController extends Controller
 {
-    public function showForm(Request $request) {
+    public function showQuestion(Request $request) {
         foreach (['admin', 'student', 'teacher'] as $guard) {
             $user = $request->user($guard);
             if ($user)
@@ -21,11 +20,17 @@ class FormController extends Controller
         if (! $user->hasPermission('form-management'))
             return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
-        $data = Form::get(['id', 'name'])->toArray();
+        $data = [];
+        foreach (Question::distinct('category')->pluck('category')->toArray() as $cat) {
+            array_push($data, [
+                'category' => $cat,
+                'questions' => Question::where('category', $cat)->get(['id', 'content'])->toArray()
+            ]);
+        }
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
     }
 
-    public function addForm(Request $request) {
+    public function addQuestion(Request $request) {
         foreach (['admin', 'student', 'teacher'] as $guard) {
             $user = $request->user($guard);
             if ($user)
@@ -36,65 +41,52 @@ class FormController extends Controller
 
         if (! $user->hasPermission('form-management'))
             return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
-
-        $in = array_values($request->only('name', 'questions'));
-        $form = new Form([
-            'name' => $in[0],
-        ]);
-        $form->save();
         
-        foreach ($in[1] as $q) {
-            $fq = new Formquestion([
-                'form_id' => $form->id,
-                'question_id' => $q,
-            ]);
-            $fq->save();
-        }
-        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
-    }
-
-    public function deleteForm(Request $request) {
-        foreach (['admin', 'student', 'teacher'] as $guard) {
-            $user = $request->user($guard);
-            if ($user)
-                break;
-        }
-        if (! $user)
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
-
-        if (! $user->hasPermission('form-management'))
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
-
-        $formid = $request->get('id');
-        Formquestion::where('form_id', $formid)->delete();
-        Form::find($formid)->delete();
-        return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
-    }
-
-    public function editForm(Request $request) {
-        foreach (['admin', 'student', 'teacher'] as $guard) {
-            $user = $request->user($guard);
-            if ($user)
-                break;
-        }
-        if (! $user)
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
-
-        if (! $user->hasPermission('form-management'))
-            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
-
-        $in = array_values($request->only('id','name', 'questions'));
-        Form::find($in[0])->update([
-            'name' => $in[1],
+        $in = array_values($request->only('category', 'content'));
+        $question = new Question([
+            'category' => $in[0],
+            'content' => $in[1],
         ]);
-        Formquestion::where('form_id', $in[0])->delete();
-        foreach ($in[2] as $q) {
-            $fq = new Formquestion([
-                'form_id' => $in[0],
-                'question_id' => $q,
-            ]);
-            $fq->save();
+        $question->save();
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', $question->toArray()));
+    }
+
+    public function editQuestion(Request $request) {
+        foreach (['admin', 'student', 'teacher'] as $guard) {
+            $user = $request->user($guard);
+            if ($user)
+                break;
         }
+        if (! $user)
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        if (! $user->hasPermission('form-management'))
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        $in = array_values($request->only('id', 'category', 'content'));
+        $question = Question::find($in[0]);
+        $question->update([
+            'category' => $in[1],
+            'content' => $in[2],
+        ]);
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', $question->toArray()));
+    }
+
+    public function deleteQuestion(Request $request) {
+        foreach (['admin', 'student', 'teacher'] as $guard) {
+            $user = $request->user($guard);
+            if ($user)
+                break;
+        }
+        if (! $user)
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        if (! $user->hasPermission('form-management'))
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        $questionid = $request->get('id');
+        Question::find($questionid)->delete();
+
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', []));
     }
 }

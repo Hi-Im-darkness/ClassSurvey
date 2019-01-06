@@ -23,8 +23,6 @@ Route::get('/login', 'AuthController@showLogin');
 Route::post('/login', 'AuthController@login');
 Route::get('/logout', 'AuthController@logout');
 
-Route::get('/forms', 'FormController@showForm');
-
 Route::get('/courses', 'CourseController@showCourse');
 Route::get('/courses/liststudent', 'CourseController@listStudent');
 Route::get('/courses/surveyform', 'SurveyController@showSurveyForm');
@@ -45,3 +43,12 @@ Route::get('/teachers', 'TeacherController@showTeacher');
 Route::post('/teachers', 'TeacherController@addTeacher');
 Route::put('/teachers', 'TeacherController@editTeacher');
 Route::delete('/teachers', 'TeacherController@deleteTeacher');
+
+Route::get('/forms', 'FormController@showForm');
+Route::post('/forms', 'FormController@addForm');
+Route::put('/forms', 'FormController@editForm');
+Route::delete('/forms', 'FormController@deleteForm');
+Route::get('/forms/questions', 'QuestionController@showQuestion');
+Route::post('/forms/questions', 'QuestionController@addQuestion');
+Route::put('/forms/questions', 'QuestionController@editQuestion');
+Route::delete('/forms/questions', 'QuestionController@deleteQuestion');

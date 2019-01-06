@@ -2,7 +2,7 @@
 
 /**
  * Created by Reliese Model.
- * Date: Sat, 29 Dec 2018 17:51:22 +0000.
+ * Date: Sun, 06 Jan 2019 08:32:44 +0000.
  */
 
 namespace App\Models;
@@ -13,6 +13,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * Class Question
  * 
  * @property int $id
+ * @property string $category
  * @property string $content
  * 
  * @property \Illuminate\Database\Eloquent\Collection $dosurveys
@@ -27,6 +28,7 @@ class Question extends Eloquent
     protected $hidden = ['pivot'];
 
 	protected $fillable = [
+		'category',
 		'content'
 	];
 
