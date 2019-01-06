@@ -20,13 +20,7 @@ class QuestionController extends Controller
         if (! $user->hasPermission('form-management'))
             return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
-        $data = [];
-        foreach (Question::distinct('category')->pluck('category')->toArray() as $cat) {
-            array_push($data, [
-                'category' => $cat,
-                'questions' => Question::where('category', $cat)->get(['id', 'content'])->toArray()
-            ]);
-        }
+        $data = Question::get()->toArray();
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
     }
 
