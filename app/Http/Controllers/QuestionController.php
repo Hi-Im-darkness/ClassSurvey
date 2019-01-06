@@ -36,8 +36,11 @@ class QuestionController extends Controller
         if (! $user->hasPermission('form-management'))
             return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
-        $data = Question::distinct('category')->pluck('category')->toArray();
-        return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', [
+            'Cơ sỏ vật chất',
+            'Môn học',
+            'Hoạt động giảng dạy của giảng viên',
+        ]));
     }
 
     public function addQuestion(Request $request) {
