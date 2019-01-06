@@ -24,6 +24,22 @@ class QuestionController extends Controller
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
     }
 
+    public function showCategory(Request $request) {
+        foreach (['admin', 'student', 'teacher'] as $guard) {
+            $user = $request->user($guard);
+            if ($user)
+                break;
+        }
+        if (! $user)
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        if (! $user->hasPermission('form-management'))
+            return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
+
+        $data = Question::distinct('category')->pluck('category')->toArray();
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
+    }
+
     public function addQuestion(Request $request) {
         foreach (['admin', 'student', 'teacher'] as $guard) {
             $user = $request->user($guard);

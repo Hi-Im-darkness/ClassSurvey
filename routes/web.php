@@ -52,3 +52,4 @@ Route::get('/forms/questions', 'QuestionController@showQuestion');
 Route::post('/forms/questions', 'QuestionController@addQuestion');
 Route::put('/forms/questions', 'QuestionController@editQuestion');
 Route::delete('/forms/questions', 'QuestionController@deleteQuestion');
+Route::get('/forms/questions/categorys', 'QuestionController@showCategory');
