@@ -87,7 +87,14 @@ class CourseController extends Controller
         if($request->hasFile('file')){
             $extension = File::extension($request->file->getClientOriginalName());
             if ($extension == "xlsx" || $extension == "xls" || $extension == "csv") {
-                $data = Excel::import(new CoursesImport, $request->file);
+                Excel::import(new CoursesImport, $request->file);
+                $lastest = Course::lastest('id')->first()->get();
+                $data = [
+                    'id' => $lastest->id,
+                    'course_code' => $lastest->course_code,
+                    'course_name' => $lastest->name,
+                    'teacher_name' => $lastest->teacher()->first()->name,
+                ];
                 return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
             } else {
                 return response()->json(ResponseWrapper::wrap(false, 400, 'reason', 'file is a '.$extension.' file.!! Please upload a valid xls/csv file..!!'));
