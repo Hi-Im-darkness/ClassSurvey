@@ -88,7 +88,7 @@ class CourseController extends Controller
             $extension = File::extension($request->file->getClientOriginalName());
             if ($extension == "xlsx" || $extension == "xls" || $extension == "csv") {
                 Excel::import(new CoursesImport, $request->file);
-                $lastest = Course::lastest('id')->first()->get();
+                $lastest = Course::latest('id')->first()->get();
                 $data = [
                     'id' => $lastest->id,
                     'course_code' => $lastest->course_code,
