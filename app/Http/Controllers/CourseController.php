@@ -106,7 +106,7 @@ class CourseController extends Controller
 
         $courseid = $request->get('id');
         if (! $user->hasPermission('course-management'))
-            if (! $user->courses()->where('course_id', $courseid)-> exists())
+            if (! $user->courses()->where('course.id', $courseid)-> exists())
                 return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
         $course = Course::find($courseid);
         $students = $course->students()->get(['student.id', 'name', 'email', 'class'])->toArray();
