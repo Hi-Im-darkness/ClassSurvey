@@ -236,8 +236,8 @@ class SurveyController extends Controller
             array_push($result, [
                 'question_id' => $q->id,
                 'question_content' => $q->content,
-                'M' => $m,
-                'STD' => $std,
+                'M' => number_format($m, 2, '.', ''),
+                'STD' => number_format($std, 2, '.', ''),
                 /* 'M1' => $m1, */
                 /* 'STD1' => $std1, */
                 /* 'M2' => $m2, */
@@ -255,39 +255,3 @@ class SurveyController extends Controller
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
     }
 }
-
-/*
- *function phuongSai(data, id) {
-          var phuongSai;
-          var sumPhuongSai = 0;
-          var avg = avgPoint(data, id);
-
-
-          for (var i = 0; i < data.length; i++) {
-            var array = JSON.parse(data[i].result);
-            //console.log(array);
-            sumPhuongSai += Math.pow(array.r[id] - avg, 2);
-
-          }
-
-          console.log(sumPhuongSai/data.length);
-
-          if (isNaN(Math.sqrt(sumPhuongSai/data.length))) {
-            return 0;
-          }
-
-          return Math.sqrt(sumPhuongSai/data.length);
-      }
-function avgPoint(data, id) { // tính điểm trung bình cho từng câu hỏi theo mã
-        var sum = 0;
-        for (var i = 0; i < data.length; i++) {
-          var array = JSON.parse(data[i].result);
-          //console.log(array);
-          sum += parseInt(array.r[id]);
-        }
-        if (isNaN(sum/data.length)) {
-          return 0;
-        }
-        return sum/data.length;
-      }
- */
