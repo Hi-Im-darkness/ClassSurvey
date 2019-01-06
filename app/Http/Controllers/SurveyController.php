@@ -102,7 +102,7 @@ class SurveyController extends Controller
             $surveys = Survey::get();
         else if ($user->hasPermission('survey-result')) {
             $course_id = $user->courses()->pluck('id')->toArray();
-            $surveys = Survey::findMany($course_id)->all();
+            $surveys = Survey::whereIn('course_id', $course_id)->get();
         } else
             return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
