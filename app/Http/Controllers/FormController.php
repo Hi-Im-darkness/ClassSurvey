@@ -21,7 +21,18 @@ class FormController extends Controller
         if (! $user->hasPermission('form-management'))
             return response()->json(ResponseWrapper::wrap(false, 401, 'reason', 'permission denied'), 401);
 
-        $data = Form::get(['id', 'name'])->toArray();
+        $formid = $request->get('id');
+        if ($formid) {
+            $form = Form::find($formid);
+            $question = $form->questions()->pluck('question.id')->toArray();
+            $data = [
+                'id' => $form->id,
+                'name' => $form->name,
+                'questions' => $question,
+            ];
+        } else {
+            $data = Form::get(['id', 'name'])->toArray();
+        }
         return response()->json(ResponseWrapper::wrap(true, 200, 'data', $data));
     }
 
