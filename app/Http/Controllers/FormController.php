@@ -61,7 +61,10 @@ class FormController extends Controller
             ]);
             $fq->save();
         }
-        return response()->json(ResponseWrapper::wrap(true, 200, 'data', $form->get()->toArray()));
+        return response()->json(ResponseWrapper::wrap(true, 200, 'data', [
+            'id' => $form->id,
+            'name' => $in[0],
+        ]));
     }
 
     public function deleteForm(Request $request) {
